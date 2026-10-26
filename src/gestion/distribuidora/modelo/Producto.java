@@ -2,6 +2,7 @@ package gestion.distribuidora.modelo;
 
 public class Producto {
 
+    private Long id;   // lo genera la base de datos
     private String codigo;
     private String nombre;
     private int stock;
@@ -12,6 +13,14 @@ public class Producto {
         this.nombre = nombre;
         this.stock = stock;
         this.precio = precio;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCodigo() {
@@ -44,5 +53,24 @@ public class Producto {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    /**
+     * Verifica que el producto cumpla las reglas de la distribuidora.
+     * @throws IllegalArgumentException si algun dato no es valido
+     */
+    public void validar() {
+        if (codigo == null || codigo.isBlank()) {
+            throw new IllegalArgumentException("El codigo es obligatorio");
+        }
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException("El nombre es obligatorio");
+        }
+        if (stock < 0) {
+            throw new IllegalArgumentException("El stock no puede ser negativo");
+        }
+        if (precio < 0) {
+            throw new IllegalArgumentException("El precio no puede ser negativo");
+        }
     }
 }
