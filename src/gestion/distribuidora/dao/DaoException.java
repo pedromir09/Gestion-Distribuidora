@@ -6,10 +6,19 @@ package gestion.distribuidora.dao;
  */
 public class DaoException extends Exception {
 
+    /**
+     * Crea la excepcion guardando el error tecnico original.
+     * @param message mensaje claro para el usuario
+     * @param cause el error original (por ejemplo, la SQLException)
+     */
     public DaoException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * Crea la excepcion solo con un mensaje.
+     * @param message mensaje claro para el usuario
+     */
     public DaoException(String message) {
         super(message);
     }

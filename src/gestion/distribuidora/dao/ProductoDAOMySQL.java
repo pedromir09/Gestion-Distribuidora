@@ -2,7 +2,6 @@ package gestion.distribuidora.dao;
 
 import gestion.distribuidora.modelo.Producto;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,14 +15,14 @@ import java.util.List;
  */
 public class ProductoDAOMySQL implements ProductoDAO {
 
-    private final String url = "jdbc:mysql://localhost:3306/distribuidora";
-    private final String usuario = "root";
-    private final String clave = "clave";
+    /** Crea el DAO; cada operacion abre su propia conexion con {@link ConexionBD}. */
+    public ProductoDAOMySQL() {
+    }
 
     @Override
     public void insert(Producto producto) throws DaoException {
         String sql = "INSERT INTO productos (codigo, nombre, stock, precio) VALUES (?, ?, ?, ?)";
-        try (Connection cn = DriverManager.getConnection(url, usuario, clave);
+        try (Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = cn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, producto.getCodigo());
             ps.setString(2, producto.getNombre());
@@ -45,7 +44,7 @@ public class ProductoDAOMySQL implements ProductoDAO {
     @Override
     public Producto findById(Long id) throws DaoException {
         String sql = "SELECT id, codigo, nombre, stock, precio FROM productos WHERE id = ?";
-        try (Connection cn = DriverManager.getConnection(url, usuario, clave);
+        try (Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = cn.prepareStatement(sql)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -63,7 +62,7 @@ public class ProductoDAOMySQL implements ProductoDAO {
     public List<Producto> findAll() throws DaoException {
         List<Producto> productos = new ArrayList<>();
         String sql = "SELECT id, codigo, nombre, stock, precio FROM productos ORDER BY nombre";
-        try (Connection cn = DriverManager.getConnection(url, usuario, clave);
+        try (Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = cn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
@@ -78,7 +77,7 @@ public class ProductoDAOMySQL implements ProductoDAO {
     @Override
     public void update(Producto producto) throws DaoException {
         String sql = "UPDATE productos SET codigo = ?, nombre = ?, stock = ?, precio = ? WHERE id = ?";
-        try (Connection cn = DriverManager.getConnection(url, usuario, clave);
+        try (Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = cn.prepareStatement(sql)) {
             ps.setString(1, producto.getCodigo());
             ps.setString(2, producto.getNombre());
@@ -98,12 +97,14 @@ public class ProductoDAOMySQL implements ProductoDAO {
     @Override
     public void delete(Long id) throws DaoException {
         String sql = "DELETE FROM productos WHERE id = ?";
-        try (Connection cn = DriverManager.getConnection(url, usuario, clave);
+        try (Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = cn.prepareStatement(sql)) {
             ps.setLong(1, id);
             if (ps.executeUpdate() == 0) {
                 throw new DaoException("No existe un producto con el id " + id);
             }
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new DaoException("No se puede eliminar el producto porque tiene ventas registradas", e);
         } catch (SQLException e) {
             throw new DaoException("No se pudo eliminar el producto con id " + id, e);
         }
@@ -113,7 +114,7 @@ public class ProductoDAOMySQL implements ProductoDAO {
     public List<Producto> findByNombre(String nombre) throws DaoException {
         List<Producto> productos = new ArrayList<>();
         String sql = "SELECT id, codigo, nombre, stock, precio FROM productos WHERE nombre LIKE ? ORDER BY nombre";
-        try (Connection cn = DriverManager.getConnection(url, usuario, clave);
+        try (Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = cn.prepareStatement(sql)) {
             ps.setString(1, "%" + nombre + "%");
             try (ResultSet rs = ps.executeQuery()) {

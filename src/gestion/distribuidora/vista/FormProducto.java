@@ -9,6 +9,7 @@ import javax.swing.JTextField;
  */
 public class FormProducto extends javax.swing.JFrame {
 
+    /** Crea el formulario vacio. */
     public FormProducto() {
         initComponents();
     }
@@ -115,30 +116,58 @@ public class FormProducto extends javax.swing.JFrame {
     private javax.swing.JTextField txtStock;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Devuelve el boton Cancelar.
+     * @return el boton Cancelar
+     */
     public JButton getBtnCancelar() {
         return btnCancelar;
     }
 
+    /**
+     * Devuelve el boton Guardar.
+     * @return el boton Guardar
+     */
     public JButton getBtnGuardar() {
         return btnGuardar;
     }
 
+    /**
+     * Devuelve el campo Articulo (nombre del producto).
+     * @return el campo Articulo (nombre del producto)
+     */
     public JTextField getTxtNombre() {
         return txtNombre;
     }
 
+    /**
+     * Devuelve el campo Codigo.
+     * @return el campo Codigo
+     */
     public JTextField getTxtCodigo() {
         return txtCodigo;
     }
 
+    /**
+     * Devuelve el campo Precio.
+     * @return el campo Precio
+     */
     public JTextField getTxtPrecio() {
         return txtPrecio;
     }
 
+    /**
+     * Devuelve el campo Stock.
+     * @return el campo Stock
+     */
     public JTextField getTxtStock() {
         return txtStock;
     }
 
+    /**
+     * Muestra un mensaje de error sobre el formulario.
+     * @param mensaje el texto del error
+     */
     public void mostrarError(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }

@@ -17,6 +17,7 @@ public class ListadoProductos extends javax.swing.JFrame {
 
     private final ProductosTableModel modeloTabla = new ProductosTableModel();
 
+    /** Crea la ventana con la tabla vacia; la carga el controlador. */
     public ListadoProductos() {
         initComponents();
         setTitle("Distribuidora de Ferretería");
@@ -68,7 +69,7 @@ public class ListadoProductos extends javax.swing.JFrame {
         btnEditar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tablaProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -131,18 +132,34 @@ public class ListadoProductos extends javax.swing.JFrame {
     private javax.swing.JTable tablaProductos;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Devuelve el boton Nuevo.
+     * @return el boton Nuevo
+     */
     public JButton getBtnNuevo() {
         return btnNuevo;
     }
 
+    /**
+     * Devuelve el boton Editar.
+     * @return el boton Editar
+     */
     public JButton getBtnEditar() {
         return btnEditar;
     }
 
+    /**
+     * Devuelve el boton Eliminar.
+     * @return el boton Eliminar
+     */
     public JButton getBtnEliminar() {
         return btnEliminar;
     }
 
+    /**
+     * Devuelve el modelo de la tabla, para cargarle los productos.
+     * @return el modelo de la tabla, para cargarle los productos
+     */
     public ProductosTableModel getModeloTabla() {
         return modeloTabla;
     }
@@ -156,6 +173,10 @@ public class ListadoProductos extends javax.swing.JFrame {
         return fila == -1 ? null : modeloTabla.getProducto(fila);
     }
 
+    /**
+     * Muestra un mensaje de error sobre la ventana.
+     * @param mensaje el texto del error
+     */
     public void mostrarError(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }
@@ -167,5 +188,26 @@ public class ListadoProductos extends javax.swing.JFrame {
      */
     public boolean confirmar(String mensaje) {
         return JOptionPane.showConfirmDialog(this, mensaje, "Confirmar", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+    }
+
+    /**
+     * Ejecuta una accion cada vez que el usuario vuelve a esta ventana desde otra
+     * (por ejemplo, para recargar la tabla). La fila elegida se mantiene.
+     * @param accion lo que hay que hacer al volver
+     */
+    public void alVolverALaVentana(Runnable accion) {
+        RecargaAlVolver.instalar(this, accion, () -> {
+            Producto elegido = getProductoSeleccionado();
+            return elegido == null ? null : elegido.getId();
+        }, this::seleccionarPorId);
+    }
+
+    private void seleccionarPorId(Long id) {
+        for (int fila = 0; fila < modeloTabla.getRowCount(); fila++) {
+            if (modeloTabla.getProducto(fila).getId().equals(id)) {
+                tablaProductos.setRowSelectionInterval(fila, fila);
+                return;
+            }
+        }
     }
 }

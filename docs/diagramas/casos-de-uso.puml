@@ -1,0 +1,49 @@
+@startuml casos-de-uso
+title Distribuidora de Ferretería - Diagrama de Casos de Uso General
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+actor Empleado
+
+rectangle "Sistema de Gestión de la Distribuidora" {
+  package "Artículos" {
+    usecase "Dar de alta artículo" as P1
+    usecase "Modificar artículo" as P2
+    usecase "Eliminar artículo" as P3
+    usecase "Listar artículos" as P4
+  }
+  package "Clientes" {
+    usecase "Dar de alta cliente" as C1
+    usecase "Modificar cliente" as C2
+    usecase "Eliminar cliente" as C3
+    usecase "Listar clientes" as C4
+  }
+  package "Ventas / Pedidos" {
+    usecase "Registrar venta\n(cargar pedido)" as V1
+    usecase "Listar ventas" as V2
+    usecase "Ver detalle de venta" as V3
+    usecase "Marcar como entregada" as V4
+    usecase "Anular venta\n(solo pendiente)" as V5
+    usecase "Imprimir comprobante" as V6
+    usecase "Controlar stock" as V7
+    usecase "Devolver stock" as V8
+  }
+}
+
+Empleado --> P1
+Empleado --> P2
+Empleado --> P3
+Empleado --> P4
+Empleado --> C1
+Empleado --> C2
+Empleado --> C3
+Empleado --> C4
+Empleado --> V1
+Empleado --> V2
+Empleado --> V3
+Empleado --> V4
+Empleado --> V5
+Empleado --> V6
+V1 ..> V7 : <<include>>
+V5 ..> V8 : <<include>>
+@enduml

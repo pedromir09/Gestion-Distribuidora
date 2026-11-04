@@ -1,0 +1,46 @@
+@startuml secuencia-registrar-venta
+title Diagrama de Secuencia - Registrar venta (cargar pedido)
+skinparam shadowing false
+autonumber
+actor Empleado
+participant ":ListadoVentas" as L <<vista>>
+participant ":FormVenta" as F <<vista>>
+participant ":VentaControlador" as C <<controlador>>
+participant ":RegistrarVenta" as UC <<caso de uso>>
+participant ":Venta" as V <<modelo>>
+participant ":ProductoDAOMySQL" as PD <<dao>>
+participant ":VentaDAOMySQL" as VD <<dao>>
+database "MySQL" as DB
+
+Empleado -> F : elige cliente, agrega artículos\ny hace clic en Confirmar
+F -> C : confirmar(form, venta)
+C -> F : getClienteSeleccionado()
+C -> V : setCliente(cliente)
+C -> UC : ejecutar(ventaDAO, productoDAO, venta)
+UC -> V : validar()
+loop por cada renglón de la venta
+  UC -> PD : findById(idProducto)
+  PD -> DB : SELECT ... FROM productos WHERE id = ?
+  DB --> PD : fila del producto
+  PD --> UC : producto (stock actual)
+  alt stock insuficiente
+    UC --> C : StockInsuficienteException
+    C -> F : mostrarError(mensaje)
+  end
+end
+UC -> VD : insert(venta)
+VD -> DB : setAutoCommit(false)
+VD -> DB : INSERT INTO ventas ...
+DB --> VD : id generado
+loop por cada renglón
+  VD -> DB : INSERT INTO detalle_venta ...
+  VD -> DB : UPDATE productos SET stock = stock - ?
+end
+VD -> DB : commit()
+note right of VD : si algo falla: rollback()\ny se lanza DaoException
+VD --> UC
+UC --> C
+C -> F : dispose()
+C -> L : getModeloTabla().actualizar(ventas)
+C -> L : mostrarMensaje("Pedido registrado...")
+@enduml

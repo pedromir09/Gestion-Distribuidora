@@ -9,6 +9,13 @@ import gestion.distribuidora.modelo.Producto;
  */
 public class BuscarProducto {
 
+    /**
+     * Busca el producto.
+     * @param dao acceso a los datos de productos
+     * @param id el id a buscar
+     * @return el producto, o null si no existe
+     * @throws DaoException si no se pudo leer
+     */
     public Producto ejecutar(ProductoDAO dao, Long id) throws DaoException {
         return dao.findById(id);
     }

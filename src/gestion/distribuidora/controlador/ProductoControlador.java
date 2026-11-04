@@ -37,6 +37,7 @@ public class ProductoControlador {
         listado.getBtnNuevo().addActionListener(e -> abrirFormularioNuevo());
         listado.getBtnEditar().addActionListener(e -> abrirFormularioEditar());
         listado.getBtnEliminar().addActionListener(e -> eliminarSeleccionado());
+        listado.alVolverALaVentana(this::actualizarTabla);
         actualizarTabla();
     }
 
@@ -59,6 +60,9 @@ public class ProductoControlador {
     }
 
     private void guardarNuevo(FormProducto form) {
+        if (!form.isDisplayable()) {
+            return;   // doble clic: el formulario ya se guardo y se cerro
+        }
         try {
             altaProducto.ejecutar(dao, leerFormulario(form));
             form.dispose();
@@ -98,6 +102,9 @@ public class ProductoControlador {
     }
 
     private void guardarEdicion(FormProducto form, Long id) {
+        if (!form.isDisplayable()) {
+            return;   // doble clic: el formulario ya se guardo y se cerro
+        }
         try {
             Producto producto = leerFormulario(form);
             producto.setId(id);

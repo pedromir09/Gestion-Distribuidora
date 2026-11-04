@@ -1,22 +1,41 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package gestion.distribuidora.vista;
 
+import gestion.distribuidora.modelo.Cliente;
+import java.awt.Font;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+
 /**
- *
- * @author Administrador
+ * Ventana de clientes: muestra los clientes en una tabla, con los botones Nuevo, Editar y Eliminar.
  */
 public class ListadoClientes extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ListadoClientes.class.getName());
 
-    /**
-     * Creates new form ListadoClientes
-     */
+    private final ClientesTableModel modeloTabla = new ClientesTableModel();
+
+    /** Crea la ventana con la tabla vacia; la carga el controlador. */
     public ListadoClientes() {
         initComponents();
+        setTitle("Clientes");
+        tablaClientes.setModel(modeloTabla);
+        configurarTabla();
+    }
+
+    private void configurarTabla() {
+        tablaClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tablaClientes.setRowHeight(28);
+        tablaClientes.getTableHeader().setFont(tablaClientes.getTableHeader().getFont().deriveFont(Font.BOLD));
+
+        tablaClientes.getColumnModel().getColumn(0).setPreferredWidth(45);
+        tablaClientes.getColumnModel().getColumn(1).setPreferredWidth(190);
+        tablaClientes.getColumnModel().getColumn(2).setPreferredWidth(190);
+        tablaClientes.getColumnModel().getColumn(3).setPreferredWidth(115);
+
+        DefaultTableCellRenderer centrado = new DefaultTableCellRenderer();
+        centrado.setHorizontalAlignment(SwingConstants.CENTER);
+        tablaClientes.getColumnModel().getColumn(0).setCellRenderer(centrado);
     }
 
     /**
@@ -28,15 +47,15 @@ public class ListadoClientes extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaClientes = new javax.swing.JTable();
+        btnNuevo = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jButton1.setText("Nuevo");
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -44,69 +63,135 @@ public class ListadoClientes extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "ID", "Nom y Apell", "Direccion", "Telefono"
+                "ID", "Nombre y Apellido", "Direccion", "Telefono"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(15);
-        }
+        jScrollPane1.setViewportView(tablaClientes);
+
+        btnNuevo.setText("Nuevo");
+
+        btnEditar.setText("Editar");
+
+        btnEliminar.setText("Eliminar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(175, 175, 175)
-                        .addComponent(jButton1)))
-                .addContainerGap(32, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevo))
+                .addContainerGap(22, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnEditar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEliminar)
+                .addGap(29, 29, 29))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(btnNuevo)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEditar)
+                    .addComponent(btnEliminar))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnNuevo;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tablaClientes;
+    // End of variables declaration//GEN-END:variables
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ListadoClientes().setVisible(true));
+    /**
+     * Devuelve el boton Nuevo.
+     * @return el boton Nuevo
+     */
+    public JButton getBtnNuevo() {
+        return btnNuevo;
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    // End of variables declaration//GEN-END:variables
+    /**
+     * Devuelve el boton Editar.
+     * @return el boton Editar
+     */
+    public JButton getBtnEditar() {
+        return btnEditar;
+    }
+
+    /**
+     * Devuelve el boton Eliminar.
+     * @return el boton Eliminar
+     */
+    public JButton getBtnEliminar() {
+        return btnEliminar;
+    }
+
+    /**
+     * Devuelve el modelo de la tabla, para cargarle los clientes.
+     * @return el modelo de la tabla, para cargarle los clientes
+     */
+    public ClientesTableModel getModeloTabla() {
+        return modeloTabla;
+    }
+
+    /**
+     * Devuelve el cliente elegido en la tabla.
+     * @return el cliente seleccionado, o null si no hay ninguna fila elegida
+     */
+    public Cliente getClienteSeleccionado() {
+        int fila = tablaClientes.getSelectedRow();
+        return fila == -1 ? null : modeloTabla.getCliente(fila);
+    }
+
+    /**
+     * Muestra un mensaje de error sobre la ventana.
+     * @param mensaje el texto del error
+     */
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Pide confirmacion al usuario.
+     * @param mensaje la pregunta a mostrar
+     * @return true si el usuario respondio que si
+     */
+    public boolean confirmar(String mensaje) {
+        return JOptionPane.showConfirmDialog(this, mensaje, "Confirmar", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+    }
+
+    /**
+     * Ejecuta una accion cada vez que el usuario vuelve a esta ventana desde otra
+     * (por ejemplo, para recargar la tabla). La fila elegida se mantiene.
+     * @param accion lo que hay que hacer al volver
+     */
+    public void alVolverALaVentana(Runnable accion) {
+        RecargaAlVolver.instalar(this, accion, () -> {
+            Cliente elegido = getClienteSeleccionado();
+            return elegido == null ? null : elegido.getId();
+        }, this::seleccionarPorId);
+    }
+
+    private void seleccionarPorId(Long id) {
+        for (int fila = 0; fila < modeloTabla.getRowCount(); fila++) {
+            if (modeloTabla.getCliente(fila).getId().equals(id)) {
+                tablaClientes.setRowSelectionInterval(fila, fila);
+                return;
+            }
+        }
+    }
 }
